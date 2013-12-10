@@ -16,14 +16,15 @@ shinyUI(pageWithSidebar(
           <img id="stats_logo" align="right" 
               alt="deltaC: Statistics for environmental change" 
               src="https://dl.dropboxusercontent.com/u/596355/deltac_logo_small.png" />
-          <h2>Memory and Uncertainty</h2>
-        </div>
+          <h2>Module 1: When is a trend actually trending?</h2>
+          <h3>Autocorrelation and Slope</h3>
+        </div>'
     ),
     windowTitle="deltaC - Memory and Uncertainty"
   ), 
   # Sidebar with instructions
   sidebarPanel(
-    h4("This time-series doesn't have memory."),
+    h4("This time-series does not have autocorrelation."),
     sliderInput("nomem_center", 
                 "Slide or press play to change the regression window", 
                 min = 20, 
@@ -41,7 +42,7 @@ shinyUI(pageWithSidebar(
     HTML(
       '<br><br><br><br><br><br>'
     ),
-    h4("This time-series has memory."),
+    h4("This time-series has autocorrelation."),
     sliderInput("mem_center", 
                 "Slide or press play to change the regression window", 
                 min = 20, 
