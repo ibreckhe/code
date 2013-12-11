@@ -20,7 +20,7 @@ shinyUI(pageWithSidebar(
           <h3>Autocorrelation and Slope</h3>
         </div>'
     ),
-    windowTitle="deltaC - Memory and Uncertainty"
+    windowTitle="deltaC - Autocorrelation and Trend Uncertainty"
   ), 
   # Sidebar with instructions
   sidebarPanel(

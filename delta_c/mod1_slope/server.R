@@ -28,7 +28,7 @@ plotfun <- function(series,window,center){
   ##creates the plot
   ymin <- min(sub) - 20
   ymax <- max(sub) + 20
-  ts.plot(series,col=rgb(0.3,0.3,0.8,1),lwd=1.5)
+  ts.plot(series,col=rgb(0.3,0.3,0.8,1),lwd=1.5,ylim=c(0,6))
   polygon(x=c(start,end,rev(c(start,end))),
           y=c(rep(ymin,2),rep(ymax,2)),
           col=rgb(0.5,0.5,0.5,0.5),border=NA)
