@@ -39,6 +39,8 @@ shinyUI(pageWithSidebar(
                        tableOutput("ols_modTable")),
       conditionalPanel(condition="input.conditionedPanels=='Subsampling'",
                        tableOutput("sub_modTable")),
+      conditionalPanel(condition="input.conditionedPanels=='Lagging'",
+                       tableOutput("lag_modTable")),
     
     # Displays options for subsampling.
     conditionalPanel(condition="input.conditionedPanels=='Subsampling'",
@@ -48,7 +50,15 @@ shinyUI(pageWithSidebar(
                          min=0,
                          max=5,
                          value=1))
-           )
+           ),
+    conditionalPanel(condition="input.conditionedPanels=='Lagging'",
+                     wellPanel(
+                       helpText("Lagging Options:"),
+                       sliderInput("lag","Interval of Lag (Years)",
+                                   min=0,
+                                   max=5,
+                                   value=1))
+    )
   ),
   
   # Draw plots of the generated timeseries.
@@ -61,7 +71,8 @@ shinyUI(pageWithSidebar(
                plotOutput("sub_timePlot",height=300),
                plotOutput("sub_diagPlot",height=300)),
       tabPanel("Lagging",
-              helpText("Nothing Here Yet")),
+               plotOutput("lag_timePlot",height=300),
+               plotOutput("lag_diagPlot",height=300)),
       tabPanel("GLS",
                helpText("Nothing Here Yet"))
     )
