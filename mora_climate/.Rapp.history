@@ -1,0 +1,710 @@
+?spDynLM
+colnames(tmax_wide) <- paste("TMAX",colnames(tmax_wide),sep="_")#
+colnames(tmin_wide) <- paste("TMIN",colnames(tmin_wide),sep="_")#
+colnames(prcp_wide) <- paste("PRCP",colnames(prcp_wide),sep="_")#
+#
+alldat_wide <- data.frame(cbind(tmax_wide,tmin_wide,prcp_wide))
+head(alldat_wide)
+write.csv(alldat_wide,"stationdat_cleaned_1981_2013.csv")
+summary(alldat_wide)
+unique(statdat$STATION)
+statdat <- read.csv("MORA_GHCN_all.csv")
+dim(statdat)
+head(statdat)
+unique(statdat$STATION)
+Cleans the TMAX data.#
+tmax_dat <- statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","TMAX")]#
+tmax_dat$DATE <- strptime(as.character(tmax_dat$DATE),format="%Y%m%d")#
+#
+# ##Examines the data.#
+# scatter.smooth(as.Date(tmax_dat$DATE),tmax_dat$TMAX,pch=20,cex=0.2,#
+               # col=rgb(0.5,0.5,0.5,0.5),main="TMAX",lpars=list(col="red"))#
+#
+##Eliminates impossible values#
+tmax_dat$TMAX[which(tmax_dat$TMAX > 500)] <- NA#
+tmax_dat$TMAX[which(tmax_dat$TMAX < -300)] <- NA#
+#
+##Creates a continuous sequence of days.#
+start <- min(tmax_dat$DATE)#
+end <- max(tmax_dat$DATE)#
+days <- data.frame(date=seq(start,end,by="day"))#
+#
+##Casts the tmax data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+dim(tmax_wide)
+days
+head(days)
+dim(days)
+dim(statdat)
+dim(tmax_wide)
+library(data.table)
+?data.table
+prcp_dat <- data.table(statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","PRCP")])
+str(prcp_dat)
+prcp_dat <- data.table(statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","PRCP")],key=c("STATION","DATE"))
+str(prcp_dat)
+prcp_dat$DATE <- strptime(as.character(prcp_dat$DATE),format="%Y%m%d")
+prcp_dat <- data.table(statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","PRCP")])
+prcp_dat$DATE <- strptime(as.character(prcp_dat$DATE),format="%Y%m%d")
+Cleans the PRCP data.#####
+prcp_dat <- statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","PRCP")]#
+prcp_dat$DATE <- strptime(as.character(prcp_dat$DATE),format="%Y%m%d")#
+#
+##Examines the data.#
+# scatter.smooth(as.Date(prcp_dat$DATE),prcp_dat$PRCP,pch=20,cex=0.2,#
+               # col=rgb(0.5,0.5,0.5,0.5),main="PRCP",lpars=list(col="red"))#
+#
+##Eliminates impossible values#
+prcp_dat$PRCP[which(prcp_dat$PRCP > 2000)] <- NA#
+prcp_dat$PRCP[which(prcp_dat$PRCP < 0)] <- NA#
+#
+##Casts the prcp data to "wide" format.#
+prcp_wide<- dcast(prcp_dat,DATE~STATION,value.var="PRCP")#
+dim(prcp_wide)
+prcp_wide <- data.table(prcp_wide,key="DATE")
+prcp_wide$CHARDATE <- as.Character(prcp_wide$DATE)
+prcp_wide$CHARDATE <- as.character(prcp_wide$DATE)
+prcp_wide <- data.table(prcp_wide,key="CHARDATE")
+days$CHARDATE <- as.character(days$date)
+days_dt <- data.table(days,key="CHARDATE")
+Eliminates impossible values#
+tmax_dat$TMAX[which(tmax_dat$TMAX > 500)] <- NA#
+tmax_dat$TMAX[which(tmax_dat$TMAX < -300)] <- NA#
+#
+##Casts the prcp data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)#
+tmax_wide <- data.table(tmax_wide,key="CHARDATE")#
+dim(tmax_wide)#
+#
+##Adds in any missing days.#
+tmax_wide_all <- merge(days_dt,tmax_wide)
+dim(tmax_wide_all)
+?merge
+tmax_wide_all <- merge(days_dt,tmax_wide,by="CHARDATE",all=T)
+tmax_wide_all <- merge(days_dt,tmax_wide,all=T)
+dim(tmax_wide)
+dim(days_dt)
+head(days_dt)
+head(tmax_wide)
+Casts the prcp data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)#
+tmax_wide <- data.table(tmax_wide,key="CHARDATE")#
+dim(tmax_wide)
+head(tmax_wide)
+tmax_wide[4:8,]
+Casts the prcp data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)
+head(tmax_wide)
+seq.Date
+?seq.Date
+tmax_wide <- data.table(tmax_wide,key=c("CHARDATE"))
+head(tmax_wide)
+dimnames(tmax_wide)
+head(days_dt)
+?substr
+days$CHARDATE <- substr(as.character(days$date),start=1,end=10)
+days$CHARDATE <- substr(as.character(days$date),start=1,stop=10)
+head(days$CHARDATE)
+days_dt <- data.table(days,key="CHARDATE")
+Casts the prcp data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)#
+tmax_wide <- data.table(tmax_wide)#
+dim(tmax_wide)
+Adds in any missing days.#
+tmax_wide_all <- merge(days_dt,tmax_wide,all=T)
+str(tmax_wide)
+str(days_dt)
+tmax_wide_all <- merge(days_dt,tmax_wide,all.x=T)
+dim(tmax_wide_all)
+head(tmax_wide_all)
+summary(tmax_wide_all)
+summary(tmax_wide)
+tmax_wide_all <- merge(days_dt,tmax_wide,all=T)
+tmax_wide <- data.table(tmax_wide,key="CHARDATE")
+dim(tmax_wide)
+head(tmax_wide)
+Casts the prcp data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)#
+t
+rownames(tmax_wide) <- tmax_wide$CHARDATE
+dim(tmax_wide)
+head(tmax_wide)
+Casts the prcp data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)#
+tmax_wide <- data.table(tmax_wide,key="CHARDATE")#
+rownames(tmax_wide) <- tmax_wide$CHARDATE#
+dim(tmax_wide)#
+#
+##Adds in any missing days.#
+tmax_wide_all <- merge(days_dt,tmax_wide,all=T)
+?merge
+tmax_wide_all <- merge(x=days_dt,y=tmax_wide,by="CHARDATE",all=T)
+str(days_dt)
+head(days_dt)
+rownames(days_dt) <- days_dt$CHARDATE
+tmax_wide_all <- merge(x=days_dt,y=tmax_wide,by="CHARDATE",all=T)
+tmax_wide_all <- merge(x=days_dt,y=tmax_wide,by="CHARDATE",all.x=T)
+summary(tmax_wide_all)
+tmax_wide_all <- merge(x=days_dt,y=tmax_wide,by="CHARDATE",all.y=T)
+tmax_wide <- data.table(tmax_wide,key="DATE")
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)
+tmax_wide_all <- merge(x=days_dt,y=tmax_wide,by="CHARDATE")
+summary(tmax_wide_all)
+dim(days)
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)
+rownames(tmax_wide) <- tmax_wide$CHARDATE#
+dim(tmax_wide)#
+#
+##Adds in any missing days.#
+tmax_wide_all <- merge(days,tmax_wide,by="CHARDATE",all=T)
+summary(tmax_wide_all)
+dim(tmax_wide_all)
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide[,2:dim(tmax_wide)[2]],MARGIN=1,FUN=median,na.rm=T)
+warnings()
+Eliminates all values more than 15C from the median.#
+for (i in 2:dim(tmax_wide)[2]){#
+	diff <- abs(tmax_wide[,i] - tmax_median)#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+plot(tmax_median)
+Creates a continuous sequence of days.#
+start <- min(tmax_dat$DATE)#
+end <- max(tmax_dat$DATE)#
+days <- data.frame(date=seq(start,end,by="day")#
+days$CHARDATE <- substr(as.character(days$date),start=1,stop=10)#
+#
+# ##Examines the data.#
+# scatter.smooth(as.Date(tmax_dat$DATE),tmax_dat$TMAX,pch=20,cex=0.2,#
+               # col=rgb(0.5,0.5,0.5,0.5),main="TMAX",lpars=list(col="red"))#
+#
+##Eliminates impossible values#
+tmax_dat$TMAX[which(tmax_dat$TMAX > 500)] <- NA#
+tmax_dat$TMAX[which(tmax_dat$TMAX < -300)] <- NA#
+#
+##Casts the prcp data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)#
+rownames(tmax_wide) <- tmax_wide$CHARDATE#
+dim(tmax_wide)#
+#
+##Adds in any missing days.#
+tmax_wide_all <- merge(days,tmax_wide,by="CHARDATE",all=T)#
+#
+##Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide[,2:dim(tmax_wide)[2]],MARGIN=1,FUN=median,na.rm=T)
+plot(tmax_median)
+Creates a continuous sequence of days.#
+start <- min(tmax_dat$DATE)#
+end <- max(tmax_dat$DATE)#
+days <- data.frame(date=seq(start,end,by="day"))#
+days$CHARDATE <- substr(as.character(days$date),start=1,stop=10)
+scatter.smooth(as.Date(tmax_dat$DATE),tmax_dat$TMAX,pch=20,cex=0.2,#
+               col=rgb(0.5,0.5,0.5,0.1),main="TMAX",lpars=list(col="red"))
+plot(tmax_median)
+Examines the data.#
+scatter.smooth(as.Date(tmax_dat$DATE),tmax_dat$TMAX,pch=20,cex=0.2,#
+               col=rgb(0.5,0.5,0.5,0.1),main="TMAX",lpars=list(col="red"))
+head(tmax_wide)
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,2:dim(tmax_wide)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+##Checks the data.#
+plot(tmax_median)
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,2:dim(tmax_wide)[2]],MARGIN=1,FUN=mean,na.rm=T)#
+#
+##Checks the data.#
+plot(tmax_median)
+plot(tmax_median,type="l")
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,2:dim(tmax_wide)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+##Checks the data.#
+plot(tmax_median,type="l")
+Eliminates all values more than 15C from the median.#
+for (i in 2:dim(tmax_wide)[2]){#
+	diff <- abs(tmax_wide[,i] - tmax_median)#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+?diff
+?difference
+?-
+?sum
+Eliminates all values more than 15C from the median.#
+for (i in 2:dim(tmax_wide)[2]){#
+	diff <- abs(sum(tmax_wide[,i],(tmax_median*-1),na.rm=T)#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+Eliminates all values more than 15C from the median.#
+for (i in 2:dim(tmax_wide)[2]){#
+	diff <- abs(sum(tmax_wide[,i],(tmax_median*-1),na.rm=T))#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+diff <- abs(sum(tmax_wide[,i],(as.numeric(tmax_median)*-1),na.rm=T))
+Eliminates all values more than 15C from the median.#
+for (i in 2:dim(tmax_wide)[2]){#
+	diff <- abs(sum(tmax_wide[,i],(as.numeric(tmax_median)*-1),na.rm=T))#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+Eliminates all values more than 15C from the median.#
+for (i in 2:dim(tmax_wide)[2]){#
+	diff <- abs(sum(tmax_wide[,i],(as.numeric(tmax_median)*-1),na.rm=T))#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+Eliminates all values more than 15C from the median.#
+for (i in 2:dim(tmax_wide)[2]){#
+	diff <- abs(sum(tmax_wide[,i],as.numeric(tmax_median)*-1,na.rm=T))#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+warnings()
+Eliminates all values more than 15C from the median.#
+for (i in 2:(dim(tmax_wide)[2]-1)){#
+	diff <- abs(sum(tmax_wide[,i],as.numeric(tmax_median)*-1,na.rm=T))#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+summary(diff)
+Eliminates all values more than 15C from the median.#
+for (i in 2:(dim(tmax_wide)[2]-1)){#
+	diff <- abs(tmax_wide[,i] - as.numeric(tmax_median))#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+Casts the prcp data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)#
+rownames(tmax_wide) <- tmax_wide$CHARDATE#
+dim(tmax_wide)#
+#
+##Adds in any missing days.#
+tmax_wide_all <- merge(days,tmax_wide,by="CHARDATE",all=T)#
+#
+##Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,2:dim(tmax_wide)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+##Checks the data.#
+plot(tmax_median,type="l")#
+#
+##Eliminates all values more than 15C from the median.#
+for (i in 2:(dim(tmax_wide)[2]-1)){#
+	diff <- abs(tmax_wide[,i] - as.numeric(tmax_median))#
+	out <- which(diff>150)#
+	tmax_wide[out,i] <- NA#
+}
+Adds in any missing days.#
+tmax_wide_all <- merge(days,tmax_wide,by="CHARDATE",all=T)
+summary(tmax_wide_all)
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,2:dim(tmax_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)
+head(tmax_wide_all)
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,2:dim(tmax_wide_all[2]],MARGIN=1,FUN=median,na.rm=T)
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,2:dim(tmax_wide_all[2]],MARGIN=1,FUN=median,na.rm=T)
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,c(2:dim(tmax_wide_all[2])],MARGIN=1,FUN=median,na.rm=T)
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,c(2:dim(tmax_wide_all[2])],MARGIN=1,FUN=median,na.rm=T)
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,c(2:dim(tmax_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)
+dim(tmax_wide_all)
+dim(tmax_wide_all)[2]
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,2:dim(tmax_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)
+Function for median.#
+median_na_func <- function(x){#
+	if(is.na(x)==T){return(NA)} else return(median(x,na.rm=T))#
+}
+median_na_func(c(2,4,5))
+????na.omit
+?na.omit
+na.omit(c(NA,NA,1))
+str(na.omit(c(NA,NA,1)))
+str(na.omit(c(NA,NA,NA)))
+length(na.omit(c(NA,NA,NA))))
+length(na.omit(c(NA,NA,NA)))
+median_na_func <- function(x){#
+	if(length(na.omit(x)>0){return(median(x,na.rm=T))} else return(NA)#
+}
+Function for median.#
+median_na_func <- function(x){#
+	if(length(na.omit(x)>0)){return(median(x,na.rm=T))} else return(NA)#
+}
+median_na_func(c(0,3,2,NA))
+median_na_func(c(0,NA,NA))
+median_na_func(c(3,NA,NA))
+median_na_func(c(NA,NA,NA))
+median(c(NA,NA,NA),na.rm=T)
+tmax_median <- apply(tmax_wide_all[,2:dim(tmax_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)
+product(dim(tmax_wide_all))
+prod(dim(tmax_wide_all))
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,2:41],MARGIN=1,FUN=median,na.rm=T)
+head(2:dim(tmax_wide_all)[2]])
+head(tmax_wide_all[,2:dim(tmax_wide_all)[2]])
+head(tmax_wide_all[,3:dim(tmax_wide_all)[2]])
+head(tmax_wide_all[,4:dim(tmax_wide_all)[2]])
+Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,4:dim(tmax_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)
+Checks the data.#
+plot(tmax_median,type="l")
+summary(tmax_wide_all)
+load(".RData")
+library(devtools)#
+library(rnoaa)#
+library(reshape2)#
+#
+##Sets the API key for downloading NOAA data.#
+options(noaakey="NjuEQnGAERfxLrZNIiHqMUJsSeqiPuRR")#
+#
+##Sets the working directory.#
+setwd("~/code/mora_climate")
+Brings in and cleans the historical station data.#####
+statdat <- read.csv("MORA_GHCN_all.csv")#
+#
+##Cleans the TMAX data.#
+tmax_dat <- statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","TMAX")]#
+tmax_dat$DATE <- strptime(as.character(tmax_dat$DATE),format="%Y%m%d")#
+#
+##Creates a continuous sequence of days.#
+start <- min(tmax_dat$DATE)#
+end <- max(tmax_dat$DATE)#
+days <- data.frame(date=seq(start,end,by="day"))#
+days$CHARDATE <- substr(as.character(days$date),start=1,stop=10)#
+#
+##Examines the data.#
+scatter.smooth(as.Date(tmax_dat$DATE),tmax_dat$TMAX,pch=20,cex=0.2,#
+               col=rgb(0.5,0.5,0.5,0.1),main="TMAX",lpars=list(col="red"))#
+#
+##Eliminates impossible values#
+tmax_dat$TMAX[which(tmax_dat$TMAX > 500)] <- NA#
+tmax_dat$TMAX[which(tmax_dat$TMAX < -300)] <- NA#
+#
+##Casts the tmax data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)#
+rownames(tmax_wide) <- tmax_wide$CHARDATE#
+dim(tmax_wide)#
+#
+##Adds in any missing days.#
+tmax_wide_all <- merge(days,tmax_wide,by="CHARDATE",all=T)#
+#
+##Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,4:dim(tmax_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+##Checks the data.#
+plot(tmax_median,type="l")#
+#
+##Eliminates all values more than 15C from the median.#
+for (i in 4:(dim(tmax_wide_all)[2])){#
+	diff <- abs(tmax_wide_all[,i] - as.numeric(tmax_median))#
+	out <- which(diff>150)#
+	tmax_wide_all[out,i] <- NA#
+}
+Cleans the TMIN data.#####
+tmin_dat <- statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","TMIN")]#
+tmin_dat$DATE <- strptime(as.character(tmin_dat$DATE),format="%Y%m%d")#
+#
+##Examines the data.#
+# scatter.smooth(as.Date(tmin_dat$DATE),tmin_dat$TMIN,pch=20,cex=0.2,#
+               # col=rgb(0.5,0.5,0.5,0.5),main="TMIN",lpars=list(col="red"))#
+#
+##Eliminates impossible values#
+tmin_dat$TMIN[which(tmin_dat$TMIN > 250)] <- NA#
+tmin_dat$TMIN[which(tmin_dat$TMIN < -300)] <- NA#
+#
+##Casts the tmax data to "wide" format.#
+tmin_wide<- dcast(tmin_dat,DATE~STATION,value.var="TMIN")#
+dim(tmin_wide)#
+#
+##Adds in any missing days.#
+tmin_wide_all <- merge(days,tmin_wide,by="CHARDATE",all=T)#
+#
+##Computes a median across all stations for each day.#
+tmin_median <- apply(tmin_wide_all[,4:dim(tmin_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+##Eliminates all values more than 15C from the median.#
+for (i in 2:dim(tmin_wide_all)[2]){#
+	diff <- abs(tmin_wide_all[,i] - tmin_median)#
+	out <- which(diff>150)#
+	tmin_wide_all[out,i] <- NA#
+}
+head(tmin_wide)
+Casts the tmax data to "wide" format.#
+tmin_wide<- dcast(tmin_dat,DATE~STATION,value.var="TMIN")#
+tmin_wide$CHARDATE <- as.character(tmin_wide$DATE)#
+rownames(tmin_wide) <- tmin_wide$CHARDATE#
+dim(tmin_wide)#
+#
+##Adds in any missing days.#
+tmin_wide_all <- merge(days,tmin_wide,by="CHARDATE",all=T)#
+#
+##Computes a median across all stations for each day.#
+tmin_median <- apply(tmin_wide_all[,4:dim(tmin_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+##Eliminates all values more than 15C from the median.#
+for (i in 2:dim(tmin_wide_all)[2]){#
+	diff <- abs(tmin_wide_all[,i] - tmin_median)#
+	out <- which(diff>150)#
+	tmin_wide_all[out,i] <- NA#
+}
+Eliminates all values more than 15C from the median.#
+for (i in 4:dim(tmin_wide_all)[2]){#
+	diff <- abs(tmin_wide_all[,i] - tmin_median)#
+	out <- which(diff>150)#
+	tmin_wide_all[out,i] <- NA#
+}
+Cleans the PRCP data.#####
+prcp_dat <- statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","PRCP")]#
+prcp_dat$DATE <- strptime(as.character(prcp_dat$DATE),format="%Y%m%d")#
+#
+##Examines the data.#
+# scatter.smooth(as.Date(prcp_dat$DATE),prcp_dat$PRCP,pch=20,cex=0.2,#
+               # col=rgb(0.5,0.5,0.5,0.5),main="PRCP",lpars=list(col="red"))#
+#
+##Eliminates impossible values#
+prcp_dat$PRCP[which(prcp_dat$PRCP > 2000)] <- NA#
+prcp_dat$PRCP[which(prcp_dat$PRCP < 0)] <- NA#
+#
+##Casts the prcp data to "wide" format.#
+prcp_wide<- dcast(prcp_dat,DATE~STATION,value.var="PRCP")#
+prcp_wide$CHARDATE <- as.character(prcp_wide$DATE)#
+dim(prcp_wide)#
+#
+##Adds in any missing days.#
+prcp_wide_all <- merge(days,prcp_wide,by="CHARDATE",all=T)#
+#
+##Computes a median across all stations for each day.#
+prcp_median <- apply(prcp_wide_all[,4:dim(prcp_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+# ##Plots that along with the data.#
+# plot(log(prcp_dat$PRCP+0.01)~as.Date(prcp_dat$DATE),cex=0.1,col=rgb(0.5,0.5,0.5,0.5))#
+# lines(as.Date(days$date),log(prcp_median+0.01),lty=1)#
+#
+##Eliminates all values more than 100mm from the median.#
+for (i in 4:dim(prcp_wide_all)[2]){#
+	diff <- abs(prcp_wide_all[,i] - prcp_median)#
+	out <- which(diff>1000)#
+	prcp_wide_all[out,i] <- NA#
+}
+Binds everything together and writes to disk.#
+colnames(tmax_wide) <- paste("TMAX",colnames(tmax_wide),sep="_")#
+colnames(tmin_wide) <- paste("TMIN",colnames(tmin_wide),sep="_")#
+colnames(prcp_wide) <- paste("PRCP",colnames(prcp_wide),sep="_")#
+#
+alldat_wide <- data.frame(cbind(tmax_wide,tmin_wide,prcp_wide))#
+write.csv(alldat_wide,"stationdat_cleaned_1902_2013.csv")
+yesdat <- tmax_wide[,4:dim(tmax_wide)[2]]>0
+str(yesdat)
+tail(yesdat)
+yesdat <- apply(tmax_wide[,4:dim(tmax_wide)[2]]>0,MARGIN=1,FUN=SUM)
+yesdat <- apply(tmax_wide[,4:dim(tmax_wide)[2]]>0,MARGIN=1,FUN=sum,na.rm=T)
+plot(days,yesdat,type='l')
+summary(yesdat)
+summary(yesdat)
+length(yesdat)
+length(days$date)
+yesdat <- apply(tmax_wide_all[,4:dim(tmax_wide_all)[2]]>0,MARGIN=1,FUN=sum,na.rm=T)
+plot(days$date,yesdat,type='l')
+length(days$date)
+length(yesdat)
+tail(yesdat)
+tail(days$date)
+length(days$date)
+length(days)
+length(alldat)
+length(alldat_wide)
+dim(alldat_wide)
+Binds everything together and writes to disk.#
+colnames(tmax_wide_all) <- paste("TMAX",colnames(tmax_wide_all),sep="_")#
+colnames(tmin_wide_all) <- paste("TMIN",colnames(tmin_wide_all),sep="_")#
+colnames(prcp_wide_all) <- paste("PRCP",colnames(prcp_wide_all),sep="_")#
+#
+alldat_wide <- data.frame(cbind(tmax_wide_all,tmin_wide_all,prcp_wide_all))#
+write.csv(alldat_wide,"stationdat_cleaned_1902_2013.csv")
+dim(alldat_wide)
+tail(alldat_wide)
+names(alldat_wide) <- alldat_wide$TMAX_CHARDATE
+plot(alldat_wide[,2],alldat_wide[,5])
+summary(alldat_wide[,5])
+summary(alldat_wide[,6])
+summary(alldat_wide[,7])
+summary(alldat_wide[,8])
+summary(alldat_wide[,7])
+summary(alldat_wide[,8])
+plot(alldat_wide[,2],alldat_wide[,6])
+plot(alldat_wide[,2],alldat_wide[,6],cex=0.2,pch=20,col=rgb(1,1,1,0.4))
+plot(alldat_wide[,2],alldat_wide[,6],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,7],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,8],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,9],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,10],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,11],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,12],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,13],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,14],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,15],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,16],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,17],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,18],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,19],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,20],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,21],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,22],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,23],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,24],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,25],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,26],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,27],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,28],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,29],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,230],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,30],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,31],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,32],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,33],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,34],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,35],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,36],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,37],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,38],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,100],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,101],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,102],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,103],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,104],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,105],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+plot(alldat_wide[,2],alldat_wide[,106],cex=0.2,pch=20,col=rgb(0.2,0.2,0.2,0.4))
+Brings in and cleans the historical station data.#####
+statdat <- read.csv("MORA_GHCN_all.csv")#
+#
+##Cleans the TMAX data.#
+tmax_dat <- statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","TMAX")]#
+tmax_dat$DATE <- strptime(as.character(tmax_dat$DATE),format="%Y%m%d")#
+#
+##Creates a continuous sequence of days.#
+start <- min(tmax_dat$DATE)#
+end <- max(tmax_dat$DATE)#
+days <- data.frame(date=seq(start,end,by="day"))#
+days$CHARDATE <- substr(as.character(days$date),start=1,stop=10)#
+#
+##Examines the data.#
+scatter.smooth(as.Date(tmax_dat$DATE),tmax_dat$TMAX,pch=20,cex=0.2,#
+               col=rgb(0.5,0.5,0.5,0.1),main="TMAX",lpars=list(col="red"))#
+#
+##Eliminates impossible values#
+tmax_dat$TMAX[which(tmax_dat$TMAX > 500)] <- NA#
+tmax_dat$TMAX[which(tmax_dat$TMAX < -300)] <- NA#
+#
+##Casts the tmax data to "wide" format.#
+tmax_wide<- dcast(tmax_dat,DATE~STATION,value.var="TMAX")#
+tmax_wide$CHARDATE <- as.character(tmax_wide$DATE)#
+rownames(tmax_wide) <- tmax_wide$CHARDATE#
+dim(tmax_wide)#
+#
+##Adds in any missing days.#
+tmax_wide_all <- merge(days,tmax_wide,by="CHARDATE",all=T)#
+#
+##Computes a median across all stations for each day.#
+tmax_median <- apply(tmax_wide_all[,4:dim(tmax_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+##Checks the data.#
+plot(tmax_median,type="l")#
+#
+##Eliminates all values more than 20C from the median.#
+for (i in 4:(dim(tmax_wide_all)[2])){#
+	diff <- abs(tmax_wide_all[,i] - as.numeric(tmax_median))#
+	out <- which(diff>200)#
+	tmax_wide_all[out,i] <- NA#
+}#
+#
+####Cleans the TMIN data.#####
+tmin_dat <- statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","TMIN")]#
+tmin_dat$DATE <- strptime(as.character(tmin_dat$DATE),format="%Y%m%d")#
+#
+##Examines the data.#
+# scatter.smooth(as.Date(tmin_dat$DATE),tmin_dat$TMIN,pch=20,cex=0.2,#
+               # col=rgb(0.5,0.5,0.5,0.5),main="TMIN",lpars=list(col="red"))#
+#
+##Eliminates impossible values#
+tmin_dat$TMIN[which(tmin_dat$TMIN > 250)] <- NA#
+tmin_dat$TMIN[which(tmin_dat$TMIN < -300)] <- NA#
+#
+##Casts the tmax data to "wide" format.#
+tmin_wide<- dcast(tmin_dat,DATE~STATION,value.var="TMIN")#
+tmin_wide$CHARDATE <- as.character(tmin_wide$DATE)#
+rownames(tmin_wide) <- tmin_wide$CHARDATE#
+dim(tmin_wide)#
+#
+##Adds in any missing days.#
+tmin_wide_all <- merge(days,tmin_wide,by="CHARDATE",all=T)#
+#
+##Computes a median across all stations for each day.#
+tmin_median <- apply(tmin_wide_all[,4:dim(tmin_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+##Eliminates all values more than 20C from the median.#
+for (i in 4:dim(tmin_wide_all)[2]){#
+	diff <- abs(tmin_wide_all[,i] - tmin_median)#
+	out <- which(diff>200)#
+	tmin_wide_all[out,i] <- NA#
+}#
+#
+####Cleans the PRCP data.#####
+prcp_dat <- statdat[,c("STATION","LATITUDE","LONGITUDE","DATE","PRCP")]#
+prcp_dat$DATE <- strptime(as.character(prcp_dat$DATE),format="%Y%m%d")#
+#
+##Examines the data.#
+# scatter.smooth(as.Date(prcp_dat$DATE),prcp_dat$PRCP,pch=20,cex=0.2,#
+               # col=rgb(0.5,0.5,0.5,0.5),main="PRCP",lpars=list(col="red"))#
+#
+##Eliminates impossible values#
+prcp_dat$PRCP[which(prcp_dat$PRCP > 2000)] <- NA#
+prcp_dat$PRCP[which(prcp_dat$PRCP < 0)] <- NA#
+#
+##Casts the prcp data to "wide" format.#
+prcp_wide<- dcast(prcp_dat,DATE~STATION,value.var="PRCP")#
+prcp_wide$CHARDATE <- as.character(prcp_wide$DATE)#
+dim(prcp_wide)#
+#
+##Adds in any missing days.#
+prcp_wide_all <- merge(days,prcp_wide,by="CHARDATE",all=T)#
+#
+##Computes a median across all stations for each day.#
+prcp_median <- apply(prcp_wide_all[,4:dim(prcp_wide_all)[2]],MARGIN=1,FUN=median,na.rm=T)#
+#
+# ##Plots that along with the data.#
+# plot(log(prcp_dat$PRCP+0.01)~as.Date(prcp_dat$DATE),cex=0.1,col=rgb(0.5,0.5,0.5,0.5))#
+# lines(as.Date(days$date),log(prcp_median+0.01),lty=1)#
+#
+##Eliminates all values more than 100mm from the median.#
+for (i in 4:dim(prcp_wide_all)[2]){#
+	diff <- abs(prcp_wide_all[,i] - prcp_median)#
+	out <- which(diff>1000)#
+	prcp_wide_all[out,i] <- NA#
+}#
+#
+##Binds everything together and writes to disk.#
+colnames(tmax_wide_all) <- paste("TMAX",colnames(tmax_wide_all),sep="_")#
+colnames(tmin_wide_all) <- paste("TMIN",colnames(tmin_wide_all),sep="_")#
+colnames(prcp_wide_all) <- paste("PRCP",colnames(prcp_wide_all),sep="_")#
+#
+alldat_wide <- data.frame(cbind(tmax_wide_all,tmin_wide_all,prcp_wide_all))#
+write.csv(alldat_wide,"stationdat_cleaned_1902_2013.csv")
+summary(out)
+summary(diff)

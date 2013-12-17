@@ -20,7 +20,7 @@ mim_pts_env_81m <- readShapePoints("survey_data_gridded_env_81m",
                                    proj4string=CRS("+proj=utm +zone=10 +ellps=GRS80 +units=m +no_defs"))
 
 ##Subsamples the 81m data to get the sample size under control.(1/8 of the data=3min,2/3 of the data=4hr)
-samp_size <- round(dim(mim_pts_env_81m@data)[1]*(3/8),digits=0)
+samp_size <- round(dim(mim_pts_env_81m@data)[1]*(8/8),digits=0)
 set.seed(22)
 sampled <- sample(1:dim(mim_pts_env_81m@data)[1],size=samp_size)
 mim_pts_sample <- mim_pts_env_81m@data[sampled,]
@@ -59,9 +59,9 @@ n_samples <- batch_length*n_batch
 
 ##Sets initial values for the three chains.
 inits <- list()
-inits[[1]] <- list(beta = beta_start, phi = runif(1,0.081,5), sigma.sq = runif(1,0.001,0.2), w = 0)
-inits[[2]] <- list(beta = beta_start, phi = runif(1,0.081,5), sigma.sq = runif(1,0.001,0.2), w = 0)
-inits[[3]] <- list(beta = beta_start, phi = runif(1,0.081,5), sigma.sq = runif(1,0.001,0.2), w = 0)
+inits[[1]] <- list(beta = beta_start, phi = runif(1,0.081,10), sigma.sq = runif(1,0.001,0.2), w = 0)
+inits[[2]] <- list(beta = beta_start, phi = runif(1,0.081,10), sigma.sq = runif(1,0.001,0.2), w = 0)
+inits[[3]] <- list(beta = beta_start, phi = runif(1,0.081,10), sigma.sq = runif(1,0.001,0.2), w = 0)
 
 ##does MCMC to estimate model parameters (3 chains in parallel)
 ##Sets up timing.
@@ -71,11 +71,11 @@ start_t <- Sys.time()
 gut_spb_int <- foreach(i=1:3) %dopar% 
   (spGLM(gut_pres~log_str_dist+log_elev*log_can_ht,family="binomial",coords=obs_coords,
          starting = inits[[i]], 
-         tuning = list(beta = beta_tune, phi = 0.5, sigma.sq = 0.2, w = 0.5), 
-         priors = list(beta.Normal = list(rep(0, 5), rep(100, 5)), phi.Unif = c(0.081,5),sigma.sq.IG=c(5,0.5)),
+         tuning = list(beta = beta_tune, phi = 0.5, sigma.sq = 0.5, w = 0.5), 
+         priors = list(beta.Normal = list(rep(0, 5), rep(100, 5)), phi.Unif = c(0.081,10),sigma.sq.IG=c(5,0.5)),
          cov.model="exponential",
          verbose=T,
-         n.samples
+         amcmc = list(n.batch=n_batch,batch.length=batch_length,accept.rate=0.43),
          n.report=50))
 
 ##Reports the elapsed time.
@@ -114,9 +114,9 @@ n_samples <- batch_length*n_batch
 
 ##Sets initial values for the three chains.
 til_inits <- list()
-til_inits[[1]] <- list(beta = til_beta_start, phi = runif(1,0.05,0.2), sigma.sq = runif(1,0.04,0.06), w = 0)
-til_inits[[2]] <- list(beta = til_beta_start, phi = runif(1,0.05,0.2), sigma.sq = runif(1,0.04,0.06), w = 0)
-til_inits[[3]] <- list(beta = til_beta_start, phi = runif(1,0.05,0.2), sigma.sq = runif(1,0.04,0.06), w = 0)
+til_inits[[1]] <- list(beta = til_beta_start, phi = runif(1,0.05,5), sigma.sq = runif(1,0.04,0.06), w = 0)
+til_inits[[2]] <- list(beta = til_beta_start, phi = runif(1,0.05,5), sigma.sq = runif(1,0.04,0.06), w = 0)
+til_inits[[3]] <- list(beta = til_beta_start, phi = runif(1,0.05,5), sigma.sq = runif(1,0.04,0.06), w = 0)
 
 ##Sets up timing.
 start_t <- Sys.time()
@@ -125,14 +125,12 @@ start_t <- Sys.time()
 til_spb_int <- foreach(i=1:3) %dopar% 
   (spGLM(til_pres~log_str_dist+srad,family="binomial",coords=obs_coords,
          starting = til_inits[[i]], 
-         tuning = list(beta = til_beta_tune, phi = 0.5, sigma.sq = 0.2, w = 0.5), 
-         priors = list(beta.Normal = list(rep(0, 3), rep(100, 3)), phi.Unif = c(0.081,5),sigma.sq.IG=c(5,0.5)),
+         tuning = list(beta = til_beta_tune, phi = 0.5, sigma.sq = 0.5, w = 0.5), 
+         priors = list(beta.Normal = list(rep(0, 3), rep(100, 3)), phi.Unif = c(0.081,10),sigma.sq.IG=c(5,0.5)),
          cov.model="exponential",
          verbose=T,
-         n.samples=10000,
+         amcmc = list(n.batch=n_batch,batch.length=batch_length,accept.rate=0.43),
          n.report=50))
-
-#amcmc = list(n.batch=n_batch,batch.length=batch_length,accept.rate=0.43),
 
 ##Reports the elapsed time.
 end_t <- Sys.time()
