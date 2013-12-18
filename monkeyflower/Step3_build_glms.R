@@ -55,7 +55,7 @@ writeSpatialShape(mim_pts_env_27m, "survey_data_gridded_env_27m", factor2char = 
 writeSpatialShape(mim_pts_env_81m, "survey_data_gridded_env_81m", factor2char = TRUE, max_nchar=254)
 
 
-####Builds the models####
+####Builds the presence-only models####
 gut_gam_3m <- glm(gut_pres~I(log(stream_dist+0.01))+elev+can_ht+I(elev^2)+I(rough^2),
                   data=mim_pts_env_3m@data,family="binomial")
 gut_gam_9m <- glm(gut_pres~I(log(stream_dist+0.01))+elev+can_ht+I(elev^2)+I(rough^2),

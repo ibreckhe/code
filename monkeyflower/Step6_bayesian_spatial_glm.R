@@ -71,8 +71,8 @@ start_t <- Sys.time()
 gut_spb_int <- foreach(i=1:3) %dopar% 
   (spGLM(gut_pres~log_str_dist+log_elev*log_can_ht,family="binomial",coords=obs_coords,
          starting = inits[[i]], 
-         tuning = list(beta = beta_tune, phi = 0.5, sigma.sq = 0.5, w = 0.5), 
-         priors = list(beta.Normal = list(rep(0, 5), rep(100, 5)), phi.Unif = c(0.081,10),sigma.sq.IG=c(5,0.5)),
+         tuning = list(beta = beta_tune, phi = 0.5, sigma.sq = 0.1, w = 0.5), 
+         priors = list(beta.Normal = list(rep(0, 5), rep(100, 5)), phi.Unif = c(0.081,10),sigma.sq.IG=c(6,0.5)),
          cov.model="exponential",
          verbose=T,
          amcmc = list(n.batch=n_batch,batch.length=batch_length,accept.rate=0.43),
@@ -90,7 +90,7 @@ samps <- mcmc.list(gut_spb_int[[1]]$p.beta.theta.samples,
 plot(samps)
 
 ##Checks model outputs
-burn_in <- 0.1 * n_samples
+burn_in <- 0.5 * n_samples
 sub_samps <- burn_in:n_samples
 print(summary(window(gut_spb_int[[1]]$p.beta.theta.samples, start = burn_in)))
 print(gelman.diag(samps))
@@ -125,7 +125,7 @@ start_t <- Sys.time()
 til_spb_int <- foreach(i=1:3) %dopar% 
   (spGLM(til_pres~log_str_dist+srad,family="binomial",coords=obs_coords,
          starting = til_inits[[i]], 
-         tuning = list(beta = til_beta_tune, phi = 0.5, sigma.sq = 0.5, w = 0.5), 
+         tuning = list(beta = til_beta_tune, phi = 0.5, sigma.sq = 0.1, w = 0.5), 
          priors = list(beta.Normal = list(rep(0, 3), rep(100, 3)), phi.Unif = c(0.081,10),sigma.sq.IG=c(5,0.5)),
          cov.model="exponential",
          verbose=T,
@@ -144,11 +144,14 @@ til_samps <- mcmc.list(til_spb_int[[1]]$p.beta.theta.samples,
 plot(til_samps)
 
 ##Checks model outputs
-burn_in <- 0.1 * n_samples
+burn_in <- 0.5 * n_samples
 sub_samps <- burn_in:n_samples
-print(summary(window(til_spb_int[[1]]$p.beta.theta.samples, start = burn_in)))
+print(summary(window(til_spb_int[[1]]$p.beta.theta.samples, start = burn_in,thin=5)))
 print(gelman.diag(til_samps))
 print(spDiag(til_spb_int[[1]],start=burn_in,thin=5))
+
+##Compares credible intervals with nonspatial frequentist standard errors.
+summary(til_glm_best)
 
 ##Writes the model object to disk.
 save(til_spb_int,file="til_81m_spGLM.Rdata",compress=TRUE)
