@@ -1,0 +1,57 @@
+
+```{r include=FALSE}
+library(knitcitations)
+library(extrafont)
+options(rstudio.markdownToHTML = 
+  function(inputFile, outputFile) {      
+    require(markdown)
+    htmlOptions <- markdownHTMLOptions(defaults=TRUE)
+    htmlOptions <- htmlOptions[htmlOptions != "base64_images"]
+    markdownToHTML(inputFile, outputFile, stylesheet='custom.css')
+  }
+)
+```
+
+Changed Title!
+========================================================
+### Ian Breckheimer, `r format(Sys.time(), "%d %b %Y")`
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring web pages (click the *Help* toolbar button for more details on using R Markdown).
+
+When you click the *Knit HTML* button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+You can also embed plots, for example:
+
+```{r dev='pdf', fig.width=3, fig.height=3,fig.cap="This is a caption",echo=FALSE}
+par(mar=c(4,4,1,1))
+plot(cars)
+```
+
+Pretty tables are implemented with the xtable function:
+
+```{r echo=FALSE,results='asis'}
+library(xtable)
+print(xtable(head(iris),caption = "Title of the table"), type = 'latex') ##change type to 'html' for web.
+```
+
+It is also straightforward to include inline citations like this: `r citep("10.1890/11-0011.1")`
+
+Inline equations are handled like this (LATEX format): $\frac{1}{n} \sum_{i=i}^{n} x_{i}$
+
+You can also create display equations: $$\frac{1}{n} \sum_{i=i}^{n} x_{i}$$
+
+And it is possible to include a bibliography at the end of the document:
+
+Works Cited:
+-----------------------
+
+```{r results='asis',echo=FALSE}
+bibliography()
+```
+
+
+```{r echo=FALSE}
+system("pandoc -f markdown+pipe_tables -t latex -o /Users/ian/code/report_template.pdf '/Users/ian/code/report_template.md'")
+
+```
